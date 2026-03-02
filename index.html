@@ -689,6 +689,71 @@
 
   footer .orange { color: var(--orange); }
 
+  /* TOAST NOTIFICATION */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--orange);
+    border-radius: 8px;
+    padding: 14px 40px 14px 16px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 20px rgba(249,158,26,0.1);
+    animation: toast-in 0.5s ease forwards;
+    max-width: 320px;
+  }
+
+  .toast.hiding {
+    animation: toast-out 0.4s ease forwards;
+  }
+
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes toast-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(20px); }
+  }
+
+  .toast-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .toast-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .toast-text strong {
+    color: var(--orange);
+  }
+
+  .toast-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+
+  .toast-close:hover {
+    color: var(--text);
+  }
+
   /* RESPONSIVE */
   @media (max-width: 600px) {
     header { padding: 40px 0 16px; }
@@ -696,10 +761,17 @@
     .stat-number { font-size: 36px; }
     .clip-grid { grid-template-columns: 1fr; }
     .shame-banner { padding: 20px; }
+    .toast { left: 16px; right: 16px; max-width: none; bottom: 16px; }
   }
 </style>
 </head>
 <body>
+
+<div class="toast" id="commentToast">
+  <span class="toast-icon">💬</span>
+  <span class="toast-text">Scroll down to the <strong>comment section</strong> and roast Enri!</span>
+  <button class="toast-close" onclick="closeToast()">✕</button>
+</div>
 
 <div class="bg-grid"></div>
 <div class="bg-glow orange"></div>
@@ -1005,6 +1077,26 @@
     </p>
   </div>
 
+  <div class="divider"></div>
+
+  <div class="section-title">💬 Talk Your Trash</div>
+  <p class="section-sub">Roast Enri below. He can't defend himself.</p>
+
+  <div id="disqus_thread" style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:8px; padding:24px; margin-bottom:40px;"></div>
+
+  <script>
+    var disqus_config = function () {
+      this.page.url = window.location.href;
+      this.page.identifier = 'classic-enri-sells';
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://classic-enri-sells.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+
   <footer>
     <p>
       Made with 💔 by Enri's disappointed teammates<br>
@@ -1015,6 +1107,17 @@
 </div>
 
 <script>
+  // Toast notification
+  function closeToast() {
+    var toast = document.getElementById('commentToast');
+    toast.classList.add('hiding');
+    setTimeout(function() { toast.remove(); }, 400);
+  }
+  setTimeout(function() {
+    var toast = document.getElementById('commentToast');
+    if (toast) closeToast();
+  }, 6000);
+
   // Slideshow
   let currentSlide = 0;
   const totalSlides = 7;
