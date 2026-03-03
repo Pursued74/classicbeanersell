@@ -1082,19 +1082,19 @@
   <div class="section-title">💬 Talk Your Trash</div>
   <p class="section-sub">Roast Enri below. He can't defend himself.</p>
 
-  <div id="disqus_thread" style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:8px; padding:24px; margin-bottom:40px;"></div>
-
+  <div id="cusdis_thread"
+    data-host="https://cusdis.com"
+    data-app-id="92c14b46-6418-4147-bd77-083bfdef4704"
+    data-page-id="classic-enri-sells"
+    data-page-url=""
+    data-page-title="Classic Enri Sells"
+    data-theme="dark"
+    style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:8px; padding:24px; margin-bottom:40px;">
+  </div>
+  <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
   <script>
-    var disqus_config = function () {
-      this.page.url = window.location.href;
-      this.page.identifier = 'classic-enri-sells';
-    };
-    (function() {
-      var d = document, s = d.createElement('script');
-      s.src = 'https://classic-enri-sells.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
+    // Set page URL dynamically
+    document.getElementById('cusdis_thread').setAttribute('data-page-url', window.location.href);
   </script>
 
   <footer>
