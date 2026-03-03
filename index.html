@@ -736,6 +736,22 @@
     color: var(--orange);
   }
 
+  .toast-arrow {
+    font-size: 20px;
+    color: var(--orange);
+    flex-shrink: 0;
+    animation: bounce-arrow 1s ease-in-out infinite;
+  }
+
+  @keyframes bounce-arrow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+
+  .toast:hover .toast-arrow {
+    text-shadow: 0 0 10px var(--orange-glow);
+  }
+
   .toast-close {
     position: absolute;
     top: 8px;
@@ -767,10 +783,11 @@
 </head>
 <body>
 
-<div class="toast" id="commentToast">
+<div class="toast" id="commentToast" onclick="scrollToComments()" style="cursor:pointer;">
   <span class="toast-icon">💬</span>
   <span class="toast-text">Scroll down to the <strong>comment section</strong> and roast Enri!</span>
-  <button class="toast-close" onclick="closeToast()">✕</button>
+  <span class="toast-arrow">↓</span>
+  <button class="toast-close" onclick="event.stopPropagation(); closeToast()">✕</button>
 </div>
 
 <div class="bg-grid"></div>
@@ -1222,6 +1239,12 @@
 </div>
 
 <script>
+  // Scroll to comments
+  function scrollToComments() {
+    document.getElementById('comments-section').scrollIntoView({ behavior: 'smooth' });
+    closeToast();
+  }
+
   // Toast notification
   function closeToast() {
     var toast = document.getElementById('commentToast');
