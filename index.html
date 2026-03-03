@@ -1082,19 +1082,134 @@
   <div class="section-title">💬 Talk Your Trash</div>
   <p class="section-sub">Roast Enri below. He can't defend himself.</p>
 
-  <div id="cusdis_thread"
-    data-host="https://cusdis.com"
-    data-app-id="92c14b46-6418-4147-bd77-083bfdef4704"
-    data-page-id="classic-enri-sells"
-    data-page-url=""
-    data-page-title="Classic Enri Sells"
-    data-theme="dark"
-    style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:8px; padding:24px; margin-bottom:40px;">
+  <div id="comments-section" style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:8px; padding:24px; margin-bottom:40px;">
+
+    <!-- Comment Form -->
+    <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:28px;">
+      <input type="text" id="commentName" placeholder="Your nickname" maxlength="30"
+        style="background:#1a1f2a; border:1px solid var(--card-border); border-radius:6px; padding:12px 16px; color:var(--text); font-family:'Chakra Petch',sans-serif; font-size:14px; outline:none; transition:border-color 0.2s;"
+        onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--card-border)'" />
+      <textarea id="commentText" placeholder="Talk your trash..." maxlength="500" rows="3"
+        style="background:#1a1f2a; border:1px solid var(--card-border); border-radius:6px; padding:12px 16px; color:var(--text); font-family:'Chakra Petch',sans-serif; font-size:14px; outline:none; resize:vertical; min-height:80px; transition:border-color 0.2s;"
+        onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--card-border)'"></textarea>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span id="charCount" style="font-size:12px; color:var(--muted);">0 / 500</span>
+        <button id="submitBtn" onclick="postComment()"
+          style="background:var(--orange); color:#000; font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:14px; padding:10px 28px; border:none; border-radius:6px; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s;"
+          onmouseover="this.style.boxShadow='0 0 20px var(--orange-glow)'" onmouseout="this.style.boxShadow='none'">
+          🔥 Post
+        </button>
+      </div>
+    </div>
+
+    <!-- Comments List -->
+    <div id="commentsList" style="display:flex; flex-direction:column; gap:16px;">
+      <p style="color:var(--muted); text-align:center; font-size:14px;" id="loadingComments">Loading comments...</p>
+    </div>
   </div>
-  <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
-  <script>
-    // Set page URL dynamically
-    document.getElementById('cusdis_thread').setAttribute('data-page-url', window.location.href);
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD1mtFuCZND8iAGNn0WtmzqWKu0kL_fVQ4",
+      authDomain: "enrisellscomments.firebaseapp.com",
+      projectId: "enrisellscomments",
+      storageBucket: "enrisellscomments.firebasestorage.app",
+      messagingSenderId: "402173160334",
+      appId: "1:402173160334:web:6d3a4be39ab38fa25152df"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const commentsRef = collection(db, "comments");
+
+    // Character counter
+    document.getElementById('commentText').addEventListener('input', function() {
+      document.getElementById('charCount').textContent = this.value.length + ' / 500';
+    });
+
+    // Post comment
+    window.postComment = async function() {
+      const nameEl = document.getElementById('commentName');
+      const textEl = document.getElementById('commentText');
+      const btn = document.getElementById('submitBtn');
+      const name = nameEl.value.trim();
+      const text = textEl.value.trim();
+
+      if (!name) { nameEl.style.borderColor = 'var(--red)'; return; }
+      if (!text) { textEl.style.borderColor = 'var(--red)'; return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Posting...';
+
+      try {
+        await addDoc(commentsRef, {
+          name: name,
+          text: text,
+          timestamp: serverTimestamp()
+        });
+        textEl.value = '';
+        document.getElementById('charCount').textContent = '0 / 500';
+      } catch (err) {
+        console.error('Error posting comment:', err);
+        alert('Failed to post comment. Try again!');
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = '🔥 Post';
+    };
+
+    // Time ago helper
+    function timeAgo(date) {
+      const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+      if (seconds < 60) return 'just now';
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return minutes + 'm ago';
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return hours + 'h ago';
+      const days = Math.floor(hours / 24);
+      if (days < 30) return days + 'd ago';
+      return date.toLocaleDateString();
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Listen for comments in real-time
+    const q = query(commentsRef, orderBy("timestamp", "desc"));
+    onSnapshot(q, (snapshot) => {
+      const list = document.getElementById('commentsList');
+
+      if (snapshot.empty) {
+        list.innerHTML = '<p style="color:var(--muted); text-align:center; font-size:14px;">No comments yet. Be the first to roast Enri! 💀</p>';
+        return;
+      }
+
+      list.innerHTML = '';
+      snapshot.forEach((doc) => {
+        const d = doc.data();
+        const date = d.timestamp ? d.timestamp.toDate() : new Date();
+        const comment = document.createElement('div');
+        comment.style.cssText = 'background:#1a1f2a; border:1px solid var(--card-border); border-radius:8px; padding:16px; transition:border-color 0.2s;';
+        comment.onmouseover = () => comment.style.borderColor = 'var(--orange)';
+        comment.onmouseout = () => comment.style.borderColor = 'var(--card-border)';
+        comment.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="color:var(--orange); font-weight:700; font-size:14px;">💀 ${escapeHTML(d.name)}</span>
+            <span style="color:var(--muted); font-size:11px;">${timeAgo(date)}</span>
+          </div>
+          <p style="color:var(--text); font-size:14px; line-height:1.6; margin:0;">${escapeHTML(d.text)}</p>
+        `;
+        list.appendChild(comment);
+      });
+    });
   </script>
 
   <footer>
