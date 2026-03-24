@@ -79,7 +79,7 @@
 
   /* HEADER */
   header {
-    padding: 60px 0 20px;
+    padding: 100px 0 20px;
     text-align: center;
     position: relative;
   }
@@ -779,9 +779,45 @@
     .shame-banner { padding: 20px; }
     .toast { left: 16px; right: 16px; max-width: none; bottom: 16px; }
   }
+
+  /* NAV BAR */
+  .site-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: rgba(11,14,19,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    height: 48px;
+  }
+  .site-nav a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .site-nav a:hover, .site-nav a.active {
+    color: var(--orange);
+    text-shadow: 0 0 12px var(--orange-glow);
+  }
+  .site-nav a.active { border-bottom: 2px solid var(--orange); }
 </style>
 </head>
 <body>
+
+<nav class="site-nav">
+  <a href="index.html" class="active">Home</a>
+  <a href="meet-the-bean.html">Meet The Bean</a>
+</nav>
 
 <div class="toast" id="commentToast" onclick="scrollToComments()" style="cursor:pointer;">
   <span class="toast-icon">💬</span>
