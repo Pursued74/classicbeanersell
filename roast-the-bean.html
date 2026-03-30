@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roast The Bean | Classic Enri Sells</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F99E1A;
+    --orange-glow: #F99E1Aaa;
+    --blue: #2ED8F5;
+    --blue-glow: #2ED8F588;
+    --dark: #0B0E13;
+    --card-bg: #141921;
+    --card-border: #1E2530;
+    --red: #FF4655;
+    --text: #E8E8E8;
+    --muted: #7A8599;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Chakra Petch', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image: linear-gradient(rgba(255,70,85,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,70,85,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 0;
+  }
+
+  .bg-glow {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .bg-glow.red { background: var(--red); top: -200px; right: -100px; }
+  .bg-glow.orange { background: var(--orange); bottom: -200px; left: -100px; }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 20px;
+  }
+  nav a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    transition: color 0.3s, text-shadow 0.3s;
+    padding: 4px 12px;
+  }
+  nav a:hover {
+    color: var(--orange);
+    text-shadow: 0 0 15px var(--orange-glow);
+  }
+  nav a.active {
+    color: var(--red);
+    text-shadow: 0 0 20px rgba(255,70,85,0.5);
+    border-bottom: 2px solid var(--red);
+  }
+
+  /* HERO */
+  .hero-section {
+    text-align: center;
+    padding: 40px 0 20px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 6px 16px;
+    border-radius: 2px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: pulse-badge 2s ease-in-out infinite;
+  }
+  @keyframes pulse-badge {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,70,85,0.5); }
+    50% { box-shadow: 0 0 20px 4px rgba(255,70,85,0.3); }
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 10vw, 100px);
+    line-height: 0.95;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .hero-title .roast {
+    display: block;
+    color: var(--red);
+    text-shadow: 0 0 40px rgba(255,70,85,0.4), 0 0 80px rgba(255,70,85,0.2);
+    animation: fire-flicker 3s infinite;
+  }
+  @keyframes fire-flicker {
+    0%, 100% { text-shadow: 0 0 40px rgba(255,70,85,0.4), 0 0 80px rgba(255,70,85,0.2); }
+    25% { text-shadow: 0 0 50px rgba(255,70,85,0.6), 0 0 100px rgba(249,158,26,0.3); }
+    50% { text-shadow: 0 0 35px rgba(255,70,85,0.3), 0 0 70px rgba(255,70,85,0.15); }
+    75% { text-shadow: 0 0 55px rgba(249,158,26,0.5), 0 0 90px rgba(255,70,85,0.25); }
+  }
+  .hero-subtitle {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    line-height: 1.8;
+    margin-top: 10px;
+  }
+  .hero-subtitle span { color: var(--red); }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-border), var(--red), var(--card-border), transparent);
+    margin: 30px 0 40px;
+  }
+
+  /* ROAST FORM */
+  .roast-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 0 40px rgba(255,70,85,0.08);
+  }
+  .roast-card:hover {
+    box-shadow: 0 0 60px rgba(255,70,85,0.15);
+    border-color: var(--red);
+    transition: all 0.3s;
+  }
+
+  .form-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    background: var(--dark);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 16px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+  }
+  .form-input:focus,
+  .form-textarea:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 15px rgba(255,70,85,0.2);
+  }
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .form-textarea {
+    min-height: 160px;
+    resize: vertical;
+  }
+
+  .char-count {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    text-align: right;
+    margin-top: -18px;
+    margin-bottom: 24px;
+  }
+  .char-count.hot { color: var(--orange); }
+  .char-count.fire { color: var(--red); }
+
+  .submit-btn {
+    display: block;
+    width: 100%;
+    background: var(--red);
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    padding: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .submit-btn:hover {
+    background: #ff5a6a;
+    box-shadow: 0 0 30px rgba(255,70,85,0.5), 0 0 60px rgba(255,70,85,0.2);
+    transform: translateY(-2px);
+  }
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  /* RULES SECTION */
+  .rules {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  .rules h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 4px;
+    color: var(--orange);
+    margin-bottom: 16px;
+  }
+  .rules ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .rules li {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    line-height: 1.8;
+    letter-spacing: 1px;
+  }
+  .rules li span {
+    color: var(--red);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 30px 0;
+    border-top: 1px solid var(--card-border);
+    margin-top: 20px;
+  }
+  footer p {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+  footer span { color: var(--red); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { gap: 16px; }
+    nav a { font-size: 18px; letter-spacing: 2px; }
+    .roast-card { padding: 24px; }
+  }
+  @media (max-width: 480px) {
+    nav { gap: 10px; flex-wrap: wrap; }
+    nav a { font-size: 16px; padding: 4px 8px; }
+    .roast-card { padding: 20px 16px; }
+    .submit-btn { font-size: 22px; letter-spacing: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow red"></div>
+<div class="bg-glow orange"></div>
+
+<div class="container">
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="meet-the-bean.html">Meet The Bean</a>
+    <a href="roast-the-bean.html" class="active">Roast The Bean</a>
+  </nav>
+
+  <section class="hero-section">
+    <div class="hero-badge">// OPEN FIRE //</div>
+    <h1 class="hero-title">
+      ROAST THE<span class="roast">BEAN</span>
+    </h1>
+    <p class="hero-subtitle">
+      Think you can cook him? <span>Prove it.</span><br>
+      Drop your hottest roast below and it'll be delivered straight to the bean.
+    </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <form action="https://formsubmit.co/pursuedemail123@gmail.com" method="POST" class="roast-card">
+    <!-- FormSubmit config -->
+    <input type="hidden" name="_subject" value="NEW ROAST INCOMING">
+    <input type="hidden" name="_captcha" value="true">
+    <input type="hidden" name="_next" value="https://classicbeanersell.com/roast-the-bean.html?sent=1">
+    <input type="text" name="_honey" style="display:none">
+
+    <label class="form-label" for="name">Your Gamertag</label>
+    <input type="text" name="name" id="name" class="form-input" placeholder="Anonymous Roaster" required>
+
+    <label class="form-label" for="roast">Your Roast</label>
+    <textarea name="roast" id="roast" class="form-textarea" placeholder="Go ahead... cook him. He's already used to getting flamed in ranked." maxlength="500" required></textarea>
+    <div class="char-count" id="charCount">0 / 500</div>
+
+    <button type="submit" class="submit-btn">Send The Roast</button>
+  </form>
+
+  <section class="rules">
+    <h3>Rules of Engagement</h3>
+    <ul>
+      <li><span>01.</span> Be creative. "You're bad" is boring.</li>
+      <li><span>02.</span> Overwatch references get bonus points.</li>
+      <li><span>03.</span> The bean reads every single one.</li>
+      <li><span>04.</span> No limits. He can take it. (He's Forever Plat.)</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Classic Enri Sells &mdash; <span>classicbeanersell.com</span></p>
+  </footer>
+
+</div>
+
+<script>
+  // Character counter
+  const textarea = document.getElementById('roast');
+  const counter = document.getElementById('charCount');
+  textarea.addEventListener('input', () => {
+    const len = textarea.value.length;
+    counter.textContent = len + ' / 500';
+    counter.className = 'char-count';
+    if (len > 400) counter.classList.add('fire');
+    else if (len > 250) counter.classList.add('hot');
+  });
+
+  // Success message after redirect
+  if (window.location.search.includes('sent=1')) {
+    const card = document.querySelector('.roast-card');
+    card.innerHTML = `
+      <div style="text-align:center; padding: 40px 0;">
+        <div style="font-size: 48px; margin-bottom: 16px;">&#x1F525;</div>
+        <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 4px; color: var(--red); margin-bottom: 12px;">ROAST DELIVERED</h2>
+        <p style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--muted); line-height: 1.8;">
+          The bean has been notified.<br>He's probably crying right now.
+        </p>
+        <a href="roast-the-bean.html" style="display: inline-block; margin-top: 24px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; color: var(--orange); text-decoration: none; border: 1px solid var(--orange); padding: 10px 24px; border-radius: 4px; transition: all 0.3s;">ROAST AGAIN</a>
+      </div>
+    `;
+    history.replaceState(null, '', 'roast-the-bean.html');
+  }
+</script>
+
+</body>
+</html>
